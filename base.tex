@@ -11,6 +11,13 @@
 \usepackage{biblatex} % TODO style w/o quotation marks
 \usepackage{siunitx}
 \usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{color,soul}
+\usepackage{xcolor}
+
+\def\mul#1#2{\color{#1}\underline{{\color{black}#2}}\color{black}}
+
+\newtheorem{lem}{Lemma}
 
 \setmainfont{XITS}
 \setmathfont{XITS Math}
@@ -113,6 +120,167 @@
     \Large \center{\insertsection}
   \end{frame}
 }
+
+% Beginning of Xavier's frames
+\begin{frame}
+  \frametitle{Forward and Backward Reasoning}
+
+  \begin{itemize}
+    \item Forward : 
+    From the premises to the conclusion of the rule.
+    \begin{center}
+      Work on the goal's hypotheses forwards to the target.
+    \end{center}
+    
+    \item Backward : 
+    From the conclusion to the premises.
+    \begin{center}
+      Work on the goal's target backwards to the hypotheses.
+    \end{center}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Forward and Backward Reasoning in Lean}
+  \begin{itemize}
+    \item Forward Reasoning : \lean{have} and \lean{obtain}
+    \item Backward Reasoning : \lean{apply}
+  \end{itemize}
+\end{frame}
+
+%\begin{frame}
+%  \frametitle{Forward Reasoning}
+%
+%  \begin{itemize}
+%    \item Isabelle
+%    \item Mathematics
+%  \end{itemize}
+%\end{frame}
+
+
+%\begin{frame}
+%  \frametitle{Backward Reasoning}
+%
+%  \begin{itemize}
+%    \item Lean$^*$
+%  \end{itemize}
+%\end{frame}
+
+\begin{frame}
+  \frametitle{Aesop rules}
+
+  A rule is an arbitrary Lean tactic.
+
+  Aesop provides convenient syntax (rule builders) for
+  creating rules from theorems.
+
+  Aesop always operates with a user-defined rule set.
+  \only<2>{
+  \begin{itemize}
+    \item Rules tagged with \lean{apply} try to use the rule backwards.
+    
+    \item Rules tagged with \lean{forward} try to use the rule forwards.
+    
+  \end{itemize}
+  }
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Aesop rules (\lean{apply})}
+
+  \begin{block}{Note : }
+    You can tag a rule as \lean{safe} if you believe that, given a goal
+    that matches the result of the rule, \textbf{it is always the right move to use.}
+    Otherwise, you can tag a rule as \lean{unsafe} so that \lean{aesop} can backtrack.
+    \end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{What is a Good Backward Rule?}
+  \begin{lem}[\lean{And.intro}]
+    If the propositions 
+    \only<1>{$A$ and $B$}
+    \only<2>{\setulcolor{red}\ul{$A$} and \ul{$B$}}
+    are true and so is
+    \only<1>{$A \land B$}
+    \only<2>{\setulcolor{teal}\ul{$A \land B$}}.
+  \end{lem}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{What is a Good Forward Rule?}
+  \begin{lem}[\lean{le_trans}]
+    Given a preorder on some type $\alpha$ and elements $a,b,c$ of type $\alpha$, the following holds :
+    \only<1>{$$a \leq b \rightarrow b \leq c \rightarrow a \leq c.$$}
+    \only<2>{$$a \leq b \rightarrow b \leq c \rightarrow \mul{red}{a \leq c}.$$}
+    \only<3>{$$\mul{teal}{a \leq {\color{teal}{b}} \rightarrow {\color{teal}{b}} \leq c} \rightarrow a \leq c.$$}
+  \end{lem}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{What is a Good Forward Rule?}
+  \begin{lem}[\lean{cauchySeq_tendsto_of_complete}]
+    \setulcolor{teal}
+    \only<1>{Let $(a_n)$ be a Cauchy sequence in a complete space $X$.
+    
+    The sequence $(a_n)$ converges.
+    }
+    \only<3>{Let $(a_n)$ be a \ul{Cauchy} sequence in a \ul{complete} space $X$.
+    
+    The sequence $(a_n)$ converges.
+    }
+    \only<2>{Let $(a_n)$ be a Cauchy sequence in a complete space $X$.
+    
+    \setulcolor{red}
+    The sequence \ul{$(a_n)$ converges}.
+    }
+    
+
+    
+  \end{lem}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What is a Good Forward Rule?}
+  \begin{lem}[\lean{IsClosed.isSeqClosed}]
+    \setulcolor{teal}
+    \only<1>{
+    Let $s$ be a closed set in a $\mathbb{R}$ and
+    $(a_n) \to a$ be converging sequence such that for all $n, a_n \in s$.
+    
+    Then $a \in s$.}
+    \only<3>{
+    Let $s$ be a \ul{closed} set in a $\mathbb{R}$ and
+    $(a_n) \to a$ be \ul{converging} sequence such that \ul{for all $n, a_n \in s$}.
+    
+    Then $a \in s$.}
+    \only<2>{
+      Let $s$ be a closed set in a $\mathbb{R}$ and
+      $(a_n) \to a$ be converging sequence such that for all $n, a_n \in s$.
+      
+      \setulcolor{red}
+      Then \ul{$a \in s$.}}
+
+    
+  \end{lem}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Disclaimer : Unsafe Backward Rule}
+  Backward rules try "harder":
+  \begin{itemize}
+    \item<2-> Forward rules {\color{red}{will not}} succeed if one of the premises is missing from the context.
+    \item<3-> Backward rules {\color{blue}{might}} succeed as it will also try to prove the premises.
+  \end{itemize}
+\end{frame}
+
+
+% End of Xavier's frames
+
 
 \section{Efficient Forward Reasoning}
 
