@@ -122,18 +122,6 @@
 }
 
 \begin{frame}
-  \frametitle{Aesop}
-
-  \begin{itemize}
-    \item Tactic for customisable proof search.
-    \item Applies user-specified \emph{rules} to goals.
-    \item Rules are arbitrary tactics.
-    \item If a rule does not fully solve a goal, it produces subgoals.
-    \item Aesop proves the subgoals recursively.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
   \tableofcontents
 \end{frame}
 
@@ -157,6 +145,18 @@
       \item In Lean: \lean{have} and \lean{obtain}
       \item Works on a goal's hypotheses.
     \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Aesop}
+
+  \begin{itemize}
+    \item Tactic for customisable proof search.
+    \item Applies user-specified \emph{rules} to goals.
+    \item Rules are arbitrary tactics.
+    \item If a rule does not fully solve a goal, it produces subgoals.
+    \item Aesop proves the subgoals recursively.
   \end{itemize}
 \end{frame}
 
