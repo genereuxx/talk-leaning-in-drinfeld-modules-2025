@@ -401,7 +401,7 @@
   \frametitle{Rule Terminology}
 
   \begin{leancode}
-    trans : ∀ x y z, R x y → R y z → R x z
+    trans : ∀ x y z (p₁ : R x y) (p₂ : R y z), R x z
   \end{leancode}
 
   $x, y, z$ are determined by a match for $p₁$ and $p₂$.
@@ -415,7 +415,7 @@
   \frametitle{Matches}
 
   \begin{leancode}
-    trans : ∀ x y z, R x y → R y z → R x z
+    trans : ∀ x y z (p₁ : R x y) (p₂ : R y z), R x z
   \end{leancode}
 
   A \emph{complete match} for \texttt{trans} is a substitution
