@@ -126,9 +126,9 @@
   \end{frame}
 }
 
-\begin{frame}
-  \tableofcontents
-\end{frame}
+%\begin{frame}
+%  \tableofcontents
+%\end{frame}
 
 \section{Forward Reasoning with Aesop}
 
@@ -234,19 +234,22 @@
 \begin{frame}
   \frametitle{What Is A Good Forward Rule?}
   \begin{lem}[\texttt{cauchySeq\_tendsto\_of\_complete}]
-    \setulcolor{orange}
+   
     \only<1>{Let $(a_n)$ be a Cauchy sequence in a complete space $X$.
-    
-    The sequence $(a_n)$ converges.
-    }
-    \only<3>{Let $(a_n)$ be a \ul{Cauchy} sequence in a \ul{complete} space $X$.
     
     The sequence $(a_n)$ converges.
     }
     \only<2>{Let $(a_n)$ be a Cauchy sequence in a complete space $X$.
     
-    \setulcolor{blue}
+    
+    \setulcolor{orange}
     The sequence \ul{$(a_n)$ converges}.
+    }
+    \only<3>{
+      \setulcolor{blue}  
+    Let $(a_n)$ be a \ul{Cauchy} sequence in a \ul{complete} space $X$.
+    
+    The sequence $(a_n)$ converges.
     }
     
 
@@ -257,15 +260,10 @@
 \begin{frame}
   \frametitle{What Is A Good Forward Rule?}
   \begin{lem}[\texttt{IsClosed.isSeqClosed}]
-    \setulcolor{orange}
+    
     \only<1>{
     Let $s$ be a closed set in a $\mathbb{R}$ and
     $(a_n) \to a$ be converging sequence such that for all $n, a_n \in s$.
-    
-    Then $a \in s$.}
-    \only<3>{
-    Let $s$ be a \ul{closed} set in a $\mathbb{R}$ and
-    $(a_n) \to a$ be \ul{converging} sequence such that \ul{for all $n, a_n \in s$}.
     
     Then $a \in s$.}
     \only<2>{
@@ -274,6 +272,12 @@
       
       \setulcolor{orange}
       Then \ul{$a \in s$.}}
+    \only<3>{
+      \setulcolor{blue}
+    Let $s$ be a \ul{closed} set in a $\mathbb{R}$ and
+    $(a_n) \to a$ be \ul{converging} sequence such that \ul{for all $n, a_n \in s$}.
+    
+    Then $a \in s$.}
 
     
   \end{lem}
