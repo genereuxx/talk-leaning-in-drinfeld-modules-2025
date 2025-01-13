@@ -72,6 +72,11 @@
   },
 }
 
+% Source: https://tex.stackexchange.com/questions/102069/make-a-heading-in-beamer
+\newcommand\frameheading[1]{%
+  \par\bigskip
+  {\Large\usebeamercolor[fg]{palette primary}#1}\par\smallskip}
+
 \renewcommand{\iff}{\leftrightarrow}
 \newcommand{\com}{,\,}
 \newcommand{\orange}[1]{\textcolor{orange}{#1}}
@@ -365,6 +370,14 @@
   The naive algorithm is \orange{stateless}.
 
   This leads to lots of \orange{duplicate work}.
+
+  \pause
+
+  \frameheading{Solution}
+
+  \blue{Cache} work done for one goal in a \blue{forward reasoning state}.
+
+  \blue{Reuse} this state for subgoals.
 \end{frame}
 
 \begin{frame}[fragile]
