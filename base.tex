@@ -181,21 +181,15 @@
 \begin{frame}
   \frametitle{Aesop rules}
 
-  A rule is an arbitrary Lean tactic.
-
   Aesop provides convenient syntax (rule builders) for
   creating rules from theorems.
 
-  Aesop always operates with a user-defined rule set.
-  \only<2>{
+  \pause
+
   \begin{itemize}
     \item Rules tagged with \lean{apply} try to use the rule backwards.
-    
     \item Rules tagged with \lean{forward} try to use the rule forwards.
-    
   \end{itemize}
-  }
-
 \end{frame}
 
 %\begin{frame}
