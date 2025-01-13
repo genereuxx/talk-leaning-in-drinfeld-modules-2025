@@ -207,10 +207,10 @@
   \begin{lem}[\lean{And.intro}]
     If the propositions 
     \only<1,3>{$A$ and $B$}
-    \only<2>{\setulcolor{red}\ul{$A$} and \ul{$B$}}
+    \only<2>{\setulcolor{orange}\ul{$A$} and \ul{$B$}}
     are true and so is
     \only<1,2>{$A \land B$}
-    \only<3>{\setulcolor{teal}\ul{$A \land B$}.}
+    \only<3>{\setulcolor{blue}\ul{$A \land B$}.}
   \end{lem}
 \end{frame}
 
@@ -220,8 +220,8 @@
   \begin{lem}[\lean{le_trans}]
     Given a preorder on some type $\alpha$ and elements $a,b,c$ of type $\alpha$, the following holds:
     \only<1>{$$a \leq b \rightarrow b \leq c \rightarrow a \leq c.$$}
-    \only<2>{$$a \leq b \rightarrow b \leq c \rightarrow \mul{red}{a \leq c}.$$}
-    \only<3>{$$\mul{teal}{a \leq {\color{teal}{b}} \rightarrow {\color{teal}{b}} \leq c} \rightarrow a \leq c.$$}
+    \only<2>{$$a \leq b \rightarrow b \leq c \rightarrow \mul{orange}{a \leq c}.$$}
+    \only<3>{$$\mul{blue}{a \leq {\color{blue}{b}} \rightarrow {\color{blue}{b}} \leq c} \rightarrow a \leq c.$$}
   \end{lem}
 
 \end{frame}
@@ -229,7 +229,7 @@
 \begin{frame}
   \frametitle{What is a Good Forward Rule?}
   \begin{lem}[\lean{cauchySeq_tendsto_of_complete}]
-    \setulcolor{teal}
+    \setulcolor{orange}
     \only<1>{Let $(a_n)$ be a Cauchy sequence in a complete space $X$.
     
     The sequence $(a_n)$ converges.
@@ -240,7 +240,7 @@
     }
     \only<2>{Let $(a_n)$ be a Cauchy sequence in a complete space $X$.
     
-    \setulcolor{red}
+    \setulcolor{blue}
     The sequence \ul{$(a_n)$ converges}.
     }
     
@@ -252,7 +252,7 @@
 \begin{frame}
   \frametitle{What is a Good Forward Rule?}
   \begin{lem}[\lean{IsClosed.isSeqClosed}]
-    \setulcolor{teal}
+    \setulcolor{orange}
     \only<1>{
     Let $s$ be a closed set in a $\mathbb{R}$ and
     $(a_n) \to a$ be converging sequence such that for all $n, a_n \in s$.
@@ -267,7 +267,7 @@
       Let $s$ be a closed set in a $\mathbb{R}$ and
       $(a_n) \to a$ be converging sequence such that for all $n, a_n \in s$.
       
-      \setulcolor{red}
+      \setulcolor{orange}
       Then \ul{$a \in s$.}}
 
     
@@ -278,8 +278,8 @@
   \frametitle{Disclaimer: Power of Forward Rules}
   Backward rules \enquote*{try harder}:
   \begin{itemize}
-    \item<2-> Forward rules {\color{red}{will not}} succeed if one of the premises is missing from the context.
-    \item<3-> Backward rules {\color{blue}{might}} succeed as it will also try to prove the premises.
+    \item<2-> Forward rules {\orange{will not}} succeed if one of the premises is missing from the context.
+    \item<3-> Backward rules {\blue{may}} succeed as they also try to prove the premises.
   \end{itemize}
 \end{frame}
 
