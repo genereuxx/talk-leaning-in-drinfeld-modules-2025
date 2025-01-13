@@ -144,25 +144,19 @@
   \frametitle{Forward and Backward Reasoning}
 
   \begin{itemize}
-    \item Forward: 
-    From the premises to the conclusion of the rule.
+    \item Backward:
+    To prove a goal, we reduce it to different goals.
     \begin{itemize}
-      \item Work on the goal's hypotheses.
+      \item In Lean: \lean{apply}
+      \item Works on a goal's target.
     \end{itemize}
-    
-    \item Backward: 
-    From the conclusion to the premises.
-    \begin{itemize}
-      \item Work on the goal's target.
-    \end{itemize}
-  \end{itemize}
-\end{frame}
 
-\begin{frame}
-  \frametitle{Forward and Backward Reasoning in Lean}
-  \begin{itemize}
-    \item Forward Reasoning: \lean{have} and \lean{obtain}
-    \item Backward Reasoning: \lean{apply}
+    \item Forward:
+    From given facts, we deduce new facts.
+    \begin{itemize}
+      \item In Lean: \lean{have} and \lean{obtain}
+      \item Works on a goal's hypotheses.
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
