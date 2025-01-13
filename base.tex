@@ -290,24 +290,6 @@
 \section{Efficient Implementation}
 
 \begin{frame}[fragile]
-  \frametitle{Forward Rules}
-
-  \begin{leancode}
-    @[aesop safe forward]
-    theorem pos_of_min_pos_l : 0 < min n m → 0 < n
-  \end{leancode}
-
-  \begin{tcolorbox}
-    \begin{center}
-      \begin{tikzpicture}[level distance=8em]
-      \node {$\begin{array}{l} n~m : ℕ \\ h : 0 < \mathrm{min}~n~m \\ ⊢ T \end{array}$}
-        child {node {$\begin{array}{l} n~m : ℕ \\ h : 0 < \mathrm{min}~n~m \\ \orange{h' : 0 < n} \\ ⊢ T \end{array}$}};
-      \end{tikzpicture}
-    \end{center}
-  \end{tcolorbox}
-\end{frame}
-
-\begin{frame}[fragile]
   \frametitle{Running Example}
 
   \begin{leancode}
