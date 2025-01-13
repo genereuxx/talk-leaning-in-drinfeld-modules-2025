@@ -469,41 +469,6 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Hypothesis Map}
-
-  $h ∈ H(s, v, e)$ iff \\
-  the type of $h$ matches the type of slot $s$ \\
-  and variable $v$ is instantiated by $e$.
-
-  \pause
-
-  \begin{example}
-    Given $h₁ : R~300~301$
-    \begin{align*}
-      h₁ &∈ H(1, y, 301) \\
-      h₁ &∈ H(2, y, 300) \\
-    \end{align*}
-  \end{example}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Match Map}
-
-  $m ∈ M(s, v, e)$ iff \\
-  $s$ is the greatest slot in $\dom{m}$ \\
-  and variable $v$ is instantiated by $e$.
-
-  \pause
-
-  \begin{example}
-    Given $h₁ : R~300~301$, $m = \{1 ↦ h₁\}$
-    \begin{align*}
-      m &∈ M(1, y, 301) \\
-    \end{align*}
-  \end{example}
-\end{frame}
-
-\begin{frame}
   \frametitle{Adding a Hypothesis: Example}
 
   $\mathrm{trans} : R~x~y → R~y~z → R~x~z$
