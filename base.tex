@@ -121,6 +121,24 @@
   \end{frame}
 }
 
+\begin{frame}
+  \frametitle{Aesop}
+
+  \begin{itemize}
+    \item Tactic for customisable proof search.
+    \item Applies user-specified \emph{rules} to goals.
+    \item Rules are arbitrary tactics.
+    \item If a rule does not fully solve a goal, it produces subgoals.
+    \item Aesop proves the subgoals recursively.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \tableofcontents
+\end{frame}
+
+\section{Forward Reasoning with Aesop}
+
 % Beginning of Xavier's frames
 \begin{frame}
   \frametitle{Forward and Backward Reasoning}
@@ -281,7 +299,7 @@
 % End of Xavier's frames
 
 
-\section{Efficient Forward Reasoning}
+\section{Efficient Implementation}
 
 \begin{frame}[fragile]
   \frametitle{Forward Rules}
