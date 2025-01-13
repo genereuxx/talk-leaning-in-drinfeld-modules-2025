@@ -312,8 +312,12 @@
   \end{leancode}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Naive Algorithm}
+
+  \begin{leancode}
+    trans : ∀ x y z, R x y → R y z → R x z
+  \end{leancode}
 
   \begin{enumerate}[<+->]
     \item $R~y~z ≟ R~300~301 ⇒ \{y ↦ 300, z ↦ 301\}$ \good
@@ -389,28 +393,28 @@
   \end{leancode}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Rule Terminology}
 
-  \[
-    \mathrm{trans} : ∀ x~y~z~(p₁ : R~x~y)~(p₂ : R~y~z),\, R~x~z
-  \]
+  \begin{leancode}
+    trans : ∀ x y z, R x y → R y z → R x z
+  \end{leancode}
 
   $x, y, z$ are determined by a match for $p₁$ and $p₂$.
 
-  $p₁$ and $p₂$ are the \emph{slots} of $\mathrm{trans}$.
+  $p₁$ and $p₂$ are the \emph{slots} of \texttt{trans}.
 
   They are connected by the \emph{shared variable} $y$.
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Matches}
 
-  \[
-    \mathrm{trans} : ∀ x~y~z~(p₁ : R~x~y)~(p₂ : R~y~z),\, R~x~z
-  \]
+  \begin{leancode}
+    trans : ∀ x y z, R x y → R y z → R x z
+  \end{leancode}
 
-  A \emph{complete match} for $\mathrm{trans}$ is a substitution
+  A \emph{complete match} for \texttt{trans} is a substitution
   \[
     \{1 ↦ t, 2 ↦ u\}
   \]
@@ -436,7 +440,7 @@
 \begin{frame}
   \frametitle{Rule State}
 
-  The \emph{rule state} for $\mathrm{trans}$ is a pair of maps
+  The \emph{rule state} for \texttt{trans} is a pair of maps
   \begin{align*}
     H(s, v, e) &↦ \{h₁, \dots, hₖ\} \\
     M(s, v, e) &↦ \{m₁, \dots, mₗ\}
@@ -451,12 +455,15 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Adding a Hypothesis: Example}
 
-  $\mathrm{trans} : R~x~y → R~y~z → R~x~z$
+  \begin{leancode}
+    trans : R x y → R y z → R x z
 
-  $h₂ : R~301~302$, $h₁ : R~300~301$
+    h₂ : R 301 302
+    h₁ : R 300 301
+  \end{leancode}
 
   \begin{tikzpicture}[outer sep=auto, level distance=10mm]
     \node {$H$}
