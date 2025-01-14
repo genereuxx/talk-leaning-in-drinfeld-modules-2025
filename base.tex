@@ -426,13 +426,16 @@
   \[
     \{1 ↦ t, 2 ↦ u\}
   \]
-  such that $t : R~a~b$ (matching $p₁$) and $u : R~c~d$ (matching $p₂$) with $b = c$.
+  such that
+  \begin{itemize}
+    \item $t : R~a~b$ (matching $p₁$)
+    \item $u : R~c~d$ (matching $p₂$)
+    \item $b = c$ (since $y$ is shared)
+  \end{itemize}
 
   \pause
 
   A \emph{partial match} is a substitution for some nonempty prefix of the slots.
-
-  I.e.\ if $s ∈ \dom{m}$, then $s' ∈ \dom{m}$ for all $s' < s$.
 \end{frame}
 
 \begin{frame}
