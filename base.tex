@@ -494,6 +494,24 @@
   \end{tikzpicture}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Adding a Hypothesis: Example}
+
+  \begin{block}{New Goal}
+    \begin{leancode}
+      h₂ : R 301 302
+      h₁ : R 300 301
+      h₃ : R 300 302
+    \end{leancode}
+  \end{block}
+
+  \pause
+
+  To check whether $h₃$ enables more forward rules:
+
+  \emph{Reuse} constructed state and \emph{add} $h₃$.
+\end{frame}
+
 \begin{frame}
   \frametitle{Adding a Hypothesis: Algorithm}
 
