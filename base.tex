@@ -115,472 +115,377 @@
   \end{tcolorbox}%
 }
 
-\begin{document}
 
-\title{Efficient Forward Reasoning for Aesop}
-\author{Xavier Généreux \qquad Jannis Limperg\\ University of Munich (LMU)}
-\date{January 14, 2025}
+% Theme choice:
+\usetheme{default}
 
-\setbeamertemplate{footline}[text line]{\parbox{\textwidth}{\centering \url{https://github.com/JLimperg/talk-2025-01-lean-together-aesop-forward}\medskip}}
-
-\begin{frame}
-  \maketitle
-\end{frame}
-
-\setbeamertemplate{footline}{}
-
-\AtBeginSection{
-  \begin{frame}
-    \usebeamercolor[fg]{frametitle}
-    \Large \center{\insertsection}
-  \end{frame}
+% Title page details: 
+\title{For­mal­iza­tion of Drin­feld Mod­ules} 
+\author{Xavier Généreux}
+\date[\today]{\today \\ \vspace{1cm} Joint work with María Inés de Frutos-Fernández}
+\logo{\includegraphics[width=3cm]{images/Logo_LMU.png}}
+\institute 
+{
+	Lean­ing In! 2025
 }
 
-%\begin{frame}
-%  \tableofcontents
-%\end{frame}
 
-\section{Forward Reasoning with Aesop}
+\begin{document}
 
-% Beginning of Xavier's frames
+% Title page frame
 \begin{frame}
-  \frametitle{Forward and Backward Reasoning}
-
-  \begin{itemize}
-    \item Backward:
-    To prove a goal, we reduce it to simpler goals.
-    \begin{itemize}
-      \item In Lean: \lean{apply}
-      \item Works on a goal's target.
-    \end{itemize}
-
-    \item Forward:
-    From given facts, we deduce new facts.
-    \begin{itemize}
-      \item In Lean: \lean{have} and \lean{obtain}
-      \item Works on a goal's hypotheses.
-    \end{itemize}
-  \end{itemize}
+    \titlepage 
 \end{frame}
 
-\begin{frame}
-  \frametitle{Aesop}
+% Remove logo from the next slides
+\logo{}
 
-  \begin{itemize}
-    \item Tactic for customisable proof search.
-    \item Applies user-specified rules to goals.
-    \item Rules are arbitrary tactics.
-    \item If a rule does not fully solve a goal, it produces subgoals.
-    \item Aesop proves the subgoals recursively.
-  \end{itemize}
+
+% Outline frame
+\begin{frame}{Plan for today}
+	\begin{itemize}
+		\item Some motivation
+		\item The definition of Drinfeld Modules
+		\item The formalization
+	\end{itemize}
 \end{frame}
 
-%\begin{frame}
-%  \frametitle{Forward Reasoning}
-%
-%  \begin{itemize}
-%    \item Isabelle
-%    \item Mathematics
-%  \end{itemize}
-%\end{frame}
-
-
-%\begin{frame}
-%  \frametitle{Backward Reasoning}
-%
-%  \begin{itemize}
-%    \item Lean$^*$
-%  \end{itemize}
-%\end{frame}
-
-\begin{frame}
-  \frametitle{Aesop Rules}
-
-  Aesop provides convenient syntax (rule builders) for
-  creating rules from theorems.
-
-  \pause
-
-  \begin{itemize}
-    \item Rules tagged with \lean{apply} try to use the rule backwards.
-    \item Rules tagged with \lean{forward} try to use the rule forwards.
-  \end{itemize}
+\begin{frame}{Motivation}
+	\framesubtitle{Shutting down reactors?}
+	\includegraphics[width=10.5cm]{images/drinfeld_module_24.png}
+	From Fox's 2005 tv show "24", Season 4 Episode 11 .
 \end{frame}
 
-%\begin{frame}
-%  \frametitle{Aesop rules (\lean{apply})}
-%  \begin{block}{Note: }
-%    You can tag a rule as \lean{safe} if you believe that, given a goal
-%    that matches the result of the rule, \textbf{it is always the right move to use.}
-%    Otherwise, you can tag a rule as \lean{unsafe} so that \lean{aesop} can backtrack.
-%    \end{block}
-%
-%\end{frame}
+% \begin{frame}{Motivation}
+% 	\framesubtitle{Can Wikipedia help us?}
+% 	From Wikipedia: 
 
-\begin{frame}
-  \frametitle{What Is A Good Backward Rule?}
-  \begin{lem}[\texttt{And.intro}]
-    If the propositions 
-    \only<1,3>{$A$ and $B$}\setulcolor{csorange}\only<2>{\ul{$A$} and \ul{$B$}}
-    are true, then so is
-    \only<1,2>{$A \land B$}\setulcolor{csblue}\only<3>{\ul{$A \land B$}.}
-  \end{lem}
+%   \
+% 	\begin{quote}
+%         ``Drinfeld module is roughly a special kind of module \pause over a ring of functions \pause on a curve \pause over a finite field.''
+%     \end{quote}
+% \end{frame}
+
+\begin{frame}{Motivation}
+	\framesubtitle{The Function Field Analogy}
+	Let $q = p^n$ for some prime $p$.
+	We have the following correspondence :
+
+	\begin{align*}
+		&\mathbb{Z} & &\mapsto & &\mathbb{F}_q[T]
+		& &\only<1>{\text{ (The polynomials over } \mathbb{F}_q.)} \\
+		&\only<2->{\mathbb{Q} & &\mapsto & &\mathbb{F}_q(T)}
+		& &\only<2>{\text{(The rational functions over } \mathbb{F}_q.)} \\
+    \only<3->{K &/ \mathbb{Q} & &\mapsto & &K / \mathbb{F}_q(T)}
+		& &\only<3>{\text{(Finite algebraic extensions.)}} \\
+		&\only<4->{\mathbb{\overline{Q}} & &\mapsto & &\overline{\mathbb{F}_q(T)}}
+		& &\only<4>{\text{(The algebraic closure of } \mathbb{F}_q(T).)}\\
+		\only<5->{|&\cdot| & &\mapsto & &|\cdot|_\infty}
+		& &\only<5>{(\text{where } |\cdot|_\infty = q^{\text{deg}(\cdot)}.)}\\
+            &\only<6->{\mathbb{R} & &\mapsto & &\mathbb{F}_q((1/T))}
+		& &\only<6>{\text{(The completion of } \mathbb{F}_q(T).)}\\
+		&\only<7->{\mathbb{C} & &\mapsto & &\widehat{\overline{\mathbb{F}_q((1/T))}}}
+		& &\only<7>{\text{(Take closure + completion.)}}
+	\end{align*}
+
+  \only<8>{
+  Fields $K/\mathbb{F}_q(T)$ are \textit{Function Fields}.}
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{What Is A Good Forward Rule?}
-  \begin{lem}[\texttt{le\_trans}]
-    Given a preorder on some type $\alpha$ and elements $a,b,c$ of type $\alpha$, the following holds:
-    \only<1>{$$a \leq b \rightarrow b \leq c \rightarrow a \leq c.$$}
-    \only<2>{$$a \leq b \rightarrow b \leq c \rightarrow \mul{csorange}{a \leq c}.$$}
-    \only<3>{$$\mul{csblue}{a \leq {\color{csblue}{b}} \rightarrow {\color{csblue}{b}} \leq c} \rightarrow a \leq c.$$}
-  \end{lem}
+
+\begin{frame}{Motivation}
+	\framesubtitle{The Function Field Analogy}
+	
+	This is an analogy in the sense that the objects on both sides share a lot of properties.
+  
+  However, proofs are somewhat "easier" in function fields.
+	
+	\pause
+	\
+
+	Notably, the following is proven over function fields:
+	\begin{enumerate}
+		\item The extended Riemann hypothesis.
+		\pause 
+		\item The Langlands program for $\text{GL}_n$.
+	\end{enumerate}
+\end{frame}
+
+
+
+\begin{frame}{Motivation}
+	\framesubtitle{The exponential}
+	
+	Carlitz in 1935 extended the function field analogy by attaching an \textit{exponential function} $e_C(z)$.
+
+	\
+
+	This function shares many interesting properties with $e^z$.
+	However, 
+	$$e^{nz} = (e^z)^n$$
+	the Carlitz exponential satisfies
+	$$e_C(az) = C_a(e_C(z)), \text{ for } a \in F_q[T].$$
+
+	\pause
+
+	Here, $C_a(u)$ is an additive polynomial which means that
+	$$C_a(u + v) = C_a(u) + C_a(v)$$.
+\end{frame}
+
+\begin{frame}{Motivation}
+	\framesubtitle{The Carlitz Module}
+	
+	The mapping $a \mapsto C_a(u)$ is the simplest example of a Drinfeld Module. (Which we call the Carlitz Module.)
+
+	\pause
+	\
+
+	In his paper, Drinfeld extended this idea to general exponential functions of \textbf{arbitrary rank} $d$ (where $e_C(z)$ has rank 1) associated to an \textbf{arbitrary function field} with an \textbf{arbitrary choice of place} $\infty$.
+
+	It is using generalizations of these constructions that the Langlands program for $\text{GL}_n$ over function fields was realized. (Due to Drinfeld for $\text{GL}_2$ and Lafforgue for $\text{GL}_n$.)
 
 \end{frame}
 
-\begin{frame}
-  \frametitle{What Is A Good Forward Rule?}
-  \begin{lem}[\texttt{cauchySeq\_tendsto\_of\_complete}]
-   
-    \only<1>{Let $(a_n)$ be a Cauchy sequence in a complete space $X$.
+\begin{frame}{The Definition}
+	\framesubtitle{Skew Polynomials}
+	
+	Let $R$ be some commutative $\mathbb{F}_q$-algebra. The set $R\{\tau\}$ given by polynomials $\sum_{i\geq 0}^n a_i \tau^i, a_i \in R$ is a ring with the usual addition and where the multiplication is given by
+	
+	$$\tau  a = a^{q}\tau.$$
+
+	This multiplication extends to all polynomial via distributivity laws.
+
+\end{frame}
+
+\begin{frame}[fragile]{The Definition}
+	\framesubtitle{Skew Polynomials}
+	
+	We have defined skew polynomial
+        \begin{minted}{lean}
+def SkewPolynomial (R : Type*) [AddCommMonoid R] := ...
+        \end{minted}
+	which respects the expected identity
+	\begin{minted}{lean}
+lemma X_pow_mul_monomial (k n : Nat) (r : R) :
+   X^k * monomial n r = monomial (n+k) (f^[k] r) := ...
+	\end{minted}
     
-    The sequence $(a_n)$ converges.
-    }
-    \only<2>{Let $(a_n)$ be a Cauchy sequence in a complete space $X$.
+        \ 
+        
+        Note that in our case, $f := a \mapsto a^q$.
+\end{frame}
+
+\begin{frame}[fragile]{The Definition}
+	\framesubtitle{$\mathbb{F}_q$-linear polynomials}
+        Let $K$ be a field containing $\mathbb{F}_q$. The following,
+        $$K\langle x \rangle = \left\{\sum_{i = 0}^n a^i x^{q^i} | a_i \in K \right\},$$
+        is called the ring of $\mathbb{F}_q$-linear polynomials.
+        It is a ring with the usual addition and where the multiplication is given by \textit{composition}.
+        
+        We have the following isomorphism
+        $$K\{\tau\} \cong K\langle x \rangle$$
+        $$\sum_{i = 0}^n a_i \tau^{i} \mapsto \sum_{i = 0}^n a_i x^{q^i}$$
+        Given $f \in K\{\tau\}$, we write $f(x)$ for its image through the isomorphism.
+\end{frame}
+
+% \begin{frame}[fragile]{The Definition}
+% 	\framesubtitle{Drinfeld Modules}
+%         Instead of $\mathbb{F}_q[T]$, we consider $A$ the ring of regular functions outside of $\infty$.
+        
+%         Let $\mathcal{F}$ be a field equipped with a fixed morphism $\iota : A \to \mathcal{F}$.
+	
+% 	\begin{definition}
+%             A \textit{Drinfeld Module} is a $\mathbb{F}_q$-algebra homomorphism 
+%             $$\phi : A \to \mathcal{F}\{\tau\}$$
+%             such that
+%             \begin{enumerate}
+%                 \item $D \circ \phi = \iota$;
+%                 \item for some $a \in A, \phi(a) \neq \iota(a)\tau^0$.
+%             \end{enumerate}
+%         \end{definition}
+% \end{frame}
+
+\begin{frame}[fragile]{The Definition}
+	\framesubtitle{Drinfeld Modules}
+  Let $\mathcal{F}$ be a field equipped with a fixed morphism $\iota : \mathbb{F}_q[T] \to \mathcal{F}$.
+	
+	\begin{definition}
+            A \textit{Drinfeld Module} is a $\mathbb{F}_q$-algebra homomorphism 
+            $$\phi : \mathbb{F}_q[T] \to \mathcal{F}\{\tau\}$$
+            for which there exists $a_1,\dots,a_r$ not all zero such that
+            $$\phi_T = \iota(T) + a_1\tau + \dots + a_r\tau^r.$$
+        \end{definition}
+        \pause
+        The $\mathbb{F}_q[T]$-module structure on $\mathcal{F}$ is given by $a * f = \phi_a(f)$.  
+\end{frame}
+
+\begin{frame}[fragile]{The Definition}
+	\framesubtitle{Drinfeld Modules in lean}
+
+We formalize a slightly more general version where \mintinline{lean}{IsCoeffRing} generalizes the ring $\mathbb{F}_q[T]$.
+
+        \begin{minted}{lean}
+structure DrinfeldModule {A : Type} [CommRing A]
+    [Algebra A F] [IsCoeffRing F v A] (ι : A →+* R)
+    extends A →+* (SkewPolynomial R) where
+  derivative : (coeff · 0).comp toFun = ι
+  nontrivial : toFun ≠ C.comp ι
+        \end{minted}
+\end{frame}
+
+\begin{frame}{Formalization}
+	\framesubtitle{Ostrowski's Theorem for $\mathbb{F}_q(T)$}
+
+        \begin{theorem}
+            Any nontrivial absolute value on $\mathbb{F}_q(T)$ is equivalent to $| \cdot |_\infty$ or to $| \cdot |_p$ for some monic irreducible $p$ in $\mathbb{F}_q[T]$.
+        \end{theorem}
+        \ 
+        
+        Accessible because :
+        \begin{enumerate}
+            \item Good proof script already exists. [2]
+            \item \textbf{All} relevant definitions were already in Mathlib.
+            \item \textbf{Many} of the required lemmas were already in Mathlib.
+            \item Good API.
+        \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Formalization}
+	\framesubtitle{Ostrowski's Theorem for $\mathbb{F}_q(T)$}
+
+        What I mean by good API:
+        \begin{itemize}
+            \item Induction principle takes proofs from $\mathbb{F}_q(T)$ to $\mathbb{F}_q[T]$.
+            \item Mathlib can do "basic" mathematical reasoning :
+
+            \ 
+
+            \begin{quote}
+                If there exists a polynomial $f(x)$ s. t. $|f(x)| < 1$, we can find a polynomial $f'(x)$ of least degree s. t. $|f'(x)| <1 $.
+            \end{quote}
+            Given in Mathlib by \mintinline{lean}{WellFounded.min}.
+            
+        \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Formalization}
+	\framesubtitle{\mintinline{lean}{SkewPolynomial} and \mintinline{lean}{SkewMonoidAlgebra}}
+
+        Goal : Translate most of Mathlib's results for polynomials and monoid algebras.
+
+        Challenges :
+        \begin{itemize}
+            \item This is a big fragment to translate ($\sim$ 2400 lines)
+            \item We would like to mirror the implementation of polynomials and monoid algebras.
+        \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Formalization}
+	\framesubtitle{\mintinline{lean}{SkewPolynomial} and \mintinline{lean}{SkewMonoidAlgebra}}
+
+        In Mathlib, polynomial are defined as
+\begin{minted}{lean}
+structure Polynomial (R : Type*) [Semiring R] where
+  ofFinsupp :: toFinsupp : AddMonoidAlgebra R ℕ
+\end{minted}
+where 
+\begin{minted}{lean}
+def AddMonoidAlgebra :=
+  G →₀ k
+\end{minted}
     
+\end{frame}
+
+\begin{frame}[fragile]{Formalization}
+	\framesubtitle{\mintinline{lean}{SkewPolynomial} and \mintinline{lean}{SkewMonoidAlgebra}}
+
+However, there is a planned refactor to restore \mintinline{lean}{Polynomial} as a definition and put \mintinline{lean}{AddMonoidAlgebra} in a structure.
+
+This is what we have done in the skewed case:
+\begin{minted}{lean}
+def SkewPolynomial (R : Type*) [AddCommMonoid R] :=
+  SkewMonoidAlgebra R (Multiplicative ℕ)
+\end{minted}
+where 
+\begin{minted}{lean}
+structure SkewMonoidAlgebra (k G : Type*) [Zero k] where
+  /-- Map **from** `G →₀ k`. -/
+  ofFinsupp ::
+  /-- Map **to** `G →₀ k`. -/
+  toFinsupp : G →₀ k
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Formalization}
+	\framesubtitle{Using the universal property}
+
+Instead of stating theorem in terms of \mintinline{lean}{RatFunc F}, we can state theorems in terms of \mintinline{lean}{K} with the instance \mintinline{lean}{[IsFractionRing F[X] K]}.
+
+\pause
+
+\
+
+This allows one to use seemlessly result for \mintinline{lean}{RatFunc F} but also for \mintinline{lean}{FractionRing F[X]}.
+
+\end{frame}
+
+\begin{frame}[fragile]{Formalization}
+	\framesubtitle{Using the universal property}
+
+In our project, we could have defined Drinfeld modules as 
+
+        \begin{minted}{lean}
+structure DrinfeldModule (ι : (CoeffRing F v) →+* R)
+    extends (CoeffRing F v) →+* (SkewPolynomial R) where
+  derivative : (coeff · 0).comp toFun = ι
+  nontrivial : toFun ≠  C.comp ι
+        \end{minted}
+
+\end{frame}
+
+\begin{frame}[fragile]{Formalization}
+	\framesubtitle{Using the universal property}
+
+But instead we choose
+
+        \begin{minted}{lean}
+structure DrinfeldModule {A : Type} [CommRing A]
+    [Algebra A F] [IsCoeffRing F v A] (ι : A →+* R)
+    extends A →+* (SkewPolynomial R) where
+  derivative : (coeff · 0).comp toFun = ι
+  nontrivial : toFun ≠ C.comp ι
+        \end{minted}
+
+\pause
+
+In particular, this means that we can instantiate the definition with
+$\mathbb{F}_q[T]$ which is an instance of \mintinline{lean}{[IsCoeffRing _ _ _]} but not equal to \mintinline{lean}{CoeffRing}.
+
+\end{frame}
+
+\begin{frame}[fragile]{Formalization}
+	\framesubtitle{Other challenges}
+
+\begin{itemize}
+    \item Towers of fields.
+    \item Arguments from the theory that we can't follow.
+    \item A ``straighforward'' way to talk about $K[X,Y]$.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Thank you!}
+
+ \footnotesize
+    [1] Goss, David. “Basic Structures of Function Field Arithmetic.” (1997). \\
     
-    \setulcolor{csorange}
-    The sequence \ul{$(a_n)$ converges}.
-    }
-    \only<3>{
-      \setulcolor{csblue}
-    Let $(a_n)$ be a \ul{Cauchy} sequence in a \ul{complete} space $X$.
+    [2] Conrad, Keith. ``Ostrowski's theorem for F(T).'' (accessed online).\\
     
-    The sequence $(a_n)$ converges.
-    }
-    
+    [3] Rosen, Michael I.. “Number Theory in Function Fields.” (2002).\\
+  
+    [4] Papikian, Mihran. “Drinfeld Modules.” (2023).
 
-    
-  \end{lem}
-\end{frame}
-
-\begin{frame}
-  \frametitle{What Is A Good Forward Rule?}
-  \begin{lem}[\texttt{IsClosed.isSeqClosed}]
-    
-    \only<1>{
-    Let $s$ be a closed set in a $\mathbb{R}$ and
-    $(a_n) \to a$ be converging sequence such that for all $n, a_n \in s$.
-    
-    Then $a \in s$.}
-    \only<2>{
-      Let $s$ be a closed set in a $\mathbb{R}$ and
-      $(a_n) \to a$ be converging sequence such that for all $n, a_n \in s$.
-      
-      \setulcolor{csorange}
-      Then \ul{$a \in s$.}}
-    \only<3>{
-      \setulcolor{csblue}
-    Let $s$ be a \ul{closed} set in a $\mathbb{R}$ and
-    $(a_n) \to a$ be \ul{converging} sequence such that \ul{for all $n, a_n \in s$}.
-    
-    Then $a \in s$.}
-
-    
-  \end{lem}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Disclaimer: Power of Forward Rules}
-  Backward rules \enquote*{try harder}:
-  \begin{itemize}
-    \item<2-> Forward rules {\orange{will not}} succeed if one of the premises is missing from the context.
-    \item<3-> Backward rules {\blue{may}} succeed as they also try to prove the premises.
-  \end{itemize}
-
-  \only<4>{However, forward rules can also be configured to leave certain premises to be proved later (with the \texttt{immediate} option).}
-\end{frame}
-
-
-% End of Xavier's frames
-
-
-\section{Efficient Implementation}
-
-\begin{frame}[fragile]
-  \frametitle{Running Example}
-
-  \begin{leancode}
-    axiom R : ℕ → ℕ → Prop
-
-    @[aesop safe forward]
-    axiom trans : ∀ x y z, R x y → R y z → R x z
-
-    example
-        (h₁ : R 300 301)
-        (h₂ : R 301 302)
-        (h₃ : R 302 303) :
-        R 300 303 := by
-      aesop
-  \end{leancode}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Naive Algorithm}
-
-  \begin{leancode}
-    trans : ∀ x y z, R x y → R y z → R x z
-
-    h₁ : R 300 301
-    h₂ : R 301 302
-    h₃ : R 302 303
-  \end{leancode}
-
-  \begin{enumerate}[<+->]
-    \item $R~y~z ≟ R~300~301 ⇒ \{y ↦ 300, z ↦ 301\}$ \good
-          \begin{enumerate}[<+->]
-            \item $R~x~y ≟ R~300~301 ⇒ \{x ↦ 300, y ↦ 301\}$ \bad
-            \item $R~x~y ≟ R~301~302 ⇒ \{x ↦ 301, y ↦ 302\}$ \bad
-            \item $R~x~y ≟ R~302~303 ⇒ \{x ↦ 302, y ↦ 303\}$ \bad
-          \end{enumerate}
-    \item $R~y~z ≟ R~301~302 ⇒ \{y ↦ 301, z ↦ 302\}$ \good
-          \begin{enumerate}[<+->]
-            \item $R~x~y ≟ R~300~301 ⇒ \{x ↦ 300, y ↦ 301\}$ \good \\
-                  \orange{new hypothesis:} $h_{4} : R~300~302$
-          \end{enumerate}
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Naive Algorithm}
-
-  \begin{block}{New goal}
-    \begin{leancode}
-        (h₁ : R 300 301)
-        (h₂ : R 301 302)
-        (h₃ : R 302 303)
-        (h₄ : R 300 302) :
-        ⊢ R 300 303
-    \end{leancode}
-  \end{block}
-\end{frame}
-
-\begin{frame}
-  \begin{enumerate}[<+->]
-    \item $R~y~z ≟ R~300~301 ⇒ \{y ↦ 300, z ↦ 301\}$ \good
-          \begin{enumerate}[<+->]
-            \item $R~x~y ≟ R~300~301 ⇒ \{x ↦ 300, y ↦ 301\}$ \bad
-            \item \dots
-          \end{enumerate}
-    \item $R~y~z ≟ R~301~302 ⇒ \{y ↦ 301, z ↦ 302\}$ \good
-          \begin{enumerate}[<+->]
-            \item $R~x~y ≟ R~300~301 ⇒ \{x ↦ 300, y ↦ 301\}$ \orange{already exists}
-            \item $R~x~y ≟ R~301~302 ⇒ \{x ↦ 301, y ↦ 302\}$ \bad
-            \item \dots
-          \end{enumerate}
-    \item $R~y~z ≟ R~302~303 ⇒ \{y ↦ 302, z ↦ 303\}$ \good
-          \begin{enumerate}
-            \item \dots
-          \end{enumerate}
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Central Issue}
-
-  The naive algorithm is \orange{stateless}.
-
-  This leads to lots of \orange{duplicate work}.
-
-  \pause
-
-  \frameheading{Solution}
-
-  \blue{Cache} work done for one goal in a \blue{forward reasoning state}.
-
-  \blue{Reuse} this state for subgoals.
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Stateful Algorithm Interface}
-
-  \begin{leancode}
-    addHyp   : State → Hyp → State × List NewHyp
-    eraseHyp : State → Hyp → State
-  \end{leancode}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Rule Terminology}
-
-  \begin{leancode}
-    trans : ∀ x y z (p₁ : R x y) (p₂ : R y z), R x z
-  \end{leancode}
-
-  $x, y, z$ are determined by a match for $p₁$ and $p₂$.
-
-  $p₁$ and $p₂$ are the \emph{slots} of \texttt{trans}.
-
-  They are connected by the \emph{shared variable} $y$.
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Matches}
-
-  \begin{leancode}
-    trans : ∀ x y z (p₁ : R x y) (p₂ : R y z), R x z
-  \end{leancode}
-
-  A \emph{complete match} for \texttt{trans} is a substitution
-  \[
-    \{1 ↦ t, 2 ↦ u\}
-  \]
-  such that
-  \begin{itemize}
-    \item $t : R~a~b$ (matching $p₁$)
-    \item $u : R~c~d$ (matching $p₂$)
-    \item $b = c$ (since $y$ is shared)
-  \end{itemize}
-
-  \pause
-
-  A \emph{partial match} is a substitution for some nonempty prefix of the slots.
-\end{frame}
-
-\begin{frame}
-  \frametitle{Rule State}
-
-  The \emph{rule state} for \texttt{trans} is a pair of maps
-  \begin{align*}
-    H(s, v, e) &↦ \{h₁, \dots, hₖ\} \\
-    M(s, v, e) &↦ \{m₁, \dots, mₗ\}
-  \end{align*}
-  where
-  \begin{itemize}
-    \item $s$ is a slot index of \texttt{trans} (i.e.\ $s ∈ \{1,2\}$)
-    \item $v$ is a shared variable (i.e.\ $v ∈ \{y\}$)
-    \item $e$ is a Lean expression
-    \item $h₁, \dots, hₖ$ are hypotheses
-    \item $m₁, \dots, mₗ$ are matches
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Adding a Hypothesis: Example}
-
-  \begin{leancode}
-    trans : R x y → R y z → R x z
-
-    h₂ : R 301 302
-    h₁ : R 300 301
-  \end{leancode}
-
-  \begin{tikzpicture}[outer sep=auto, level distance=10mm]
-    \node {$H$}
-      child {node[xshift=-.3cm] {1}
-        child[] {node {$y$}
-          child[visible on=<2->] {node[xshift=.3cm] {$302$}
-            child {node {$\{h₂\}$}}}
-          child[visible on=<5->] {node[xshift=-.3cm] {$301$}
-            child {node {$\{h₁\}$}}}}}
-      child {node[xshift=.3cm] {2}
-        child {node {$y$}
-          child[visible on=<4->] {node[xshift=.3cm] {$301$}
-            child {node {$\{h₂\}$}}}
-          child[visible on=<8->] {node[xshift=-.3cm] {$300$}
-            child {node {$\{h₁\}$}}}}};
-    \node[xshift=5.5cm] {$M$}
-      child {node[xshift=-.4cm] {1}
-        child {node {$y$}
-          child[visible on=<3->, xshift=-.3cm] {node {$302$}
-            child {node {$\{\{1 ↦ h₂\}\}$}}}
-          child[visible on=<6->, xshift=.3cm] {node {$301$}
-            child {node {$\{\{1 ↦ h₁\}\}$}}}}}
-      child {node[xshift=.4cm] {2}
-        child {node {$y$}
-          child[visible on=<7->] {node {$301$}
-            child {node[yshift=-2em] {$\{\{1 ↦ h₁, 2 ↦ h₂\}\}$}}}}};
-  \end{tikzpicture}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Adding a Hypothesis: Example}
-
-  \begin{block}{New Goal}
-    \begin{leancode}
-      h₂ : R 301 302
-      h₁ : R 300 301
-      h₃ : R 300 302
-    \end{leancode}
-  \end{block}
-
-  \pause
-
-  To check whether $h₃$ enables more forward rules:
-
-  \emph{Reuse} constructed state and \emph{add} $h₃$.
-\end{frame}
-
-\begin{frame}
-  \frametitle{Adding a Hypothesis: Algorithm}
-
-  Given a new hypothesis $h : T$, \\
-  for each slot $s$ such that $T$ matches the type of $s$:
-  \begin{enumerate}
-    \item Add $h$ to $H(s, v, e)$ for each shared variable $v$.
-    \item Get the matches in slot $s-1$ that agree with $h$ on the shared
-          variables.
-          Extend these matches with $h$ and add them to $M(s, v, e)$ for each $v$.
-    \item For each extended match $m$, get the hypotheses in slot $s + 1$ that
-          agree with $m$. Extend the matches again and add them to $M$.
-    \item Repeat with slots $s + 2$, $s + 3$, \dots
-    \item If a match is completed, report it as a new hypothesis.
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Benchmark Setup}
-
-  \begin{leancode}
-    @[aesop safe forward]
-    axiom trans : ∀ x y z, R x y → R y z → R x z
-
-    example
-      (h₁ : R 300 301)
-      (h₂ : R 301 302)
-      ...
-      (hₙ : R (300 + n - 1) (300 + n)) :
-      True
-  \end{leancode}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Benchmark Results}
-
-  \medskip
-  \begin{center}
-    \begin{tabular}{rrrr}
-      \blue{$n$} & \orange{$k$} & \purple{$T_{\text{old}}$} & \green{$T_{\text{new}}$} \\
-      \toprule
-      10  &  45 & \SI{1}{m}  & \SI{55}{ms} \\
-      20  & 190 & \SI{18}{m} & \SI{210}{ms} \\
-      30  & 435 & \text{?}   & \SI{470}{ms} \\
-      40  & 780 & \text{?}   & \SI{860}{ms}
-    \end{tabular}
-  \end{center}
-
-  \begin{tabular}{ll}
-    \blue{$n$} & number of initial hypotheses \\
-    \orange{$k$} & number of hypotheses added by forward reasoning \\
-    \purple{$T_{\text{old}}$} & time taken by old implementation \\
-    \green{$T_{\text{new}}$} & time taken by new implementation
-  \end{tabular}
-\end{frame}
-
-\begin{frame}
-  \centering{\Huge{\blue{Thanks!}}}
-  % TODO Links/QR codes for these slides, Aesop repo, my CV
 \end{frame}
 
 \end{document}
